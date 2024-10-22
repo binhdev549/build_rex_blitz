@@ -30,9 +30,6 @@
   <script>
     window.Telegram = window.Telegram || {};
 
-
-
-
     var container = document.querySelector("#unity-container");
     var canvas = document.querySelector("#unity-canvas");
     var loadingBar = document.querySelector("#unity-loading-bar");
@@ -137,14 +134,14 @@
           const username = initDataUnsafe.user.username || 'Unknown';
 
           // Send chat_id to Unity
-          sendDataToUnity('LoginManager', 'ReceiveChatID', chatId);
+          sendDataToUnity('TelegramManager', 'ReceiveChatID', chatId);
 
           // Send username to Unity
-          sendDataToUnity('LoginManager', 'ReceiveUsername', username);
+          sendDataToUnity('TelegramManager', 'ReceiveUsername', username);
         } else {
           // Handle cases where data is missing
-          sendDataToUnity('LoginManager', 'ReceiveChatID', 'Unknown');
-          sendDataToUnity('LoginManager', 'ReceiveUsername', 'Unknown');
+          sendDataToUnity('TelegramManager', 'ReceiveChatID', 'Unknown');
+          sendDataToUnity('TelegramManager', 'ReceiveUsername', 'Unknown');
           console.warn('Chat or User information is missing.');
         }
       }).catch((message) => {
