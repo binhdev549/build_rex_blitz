@@ -130,7 +130,7 @@
         const tg = window.Telegram.WebApp;
         const initDataUnsafe = tg.initDataUnsafe;
         console.log("Telegram initDataUnsafe:", tg.initDataUnsafe);
-
+        console.log("Telegram WebApp Object:", window.Telegram.WebApp);
         if (initDataUnsafe && initDataUnsafe.chat && initDataUnsafe.user) {
           const chatId = initDataUnsafe.chat.id.toString();
           const username = initDataUnsafe.user.username || 'Unknown';
