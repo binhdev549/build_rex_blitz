@@ -7,7 +7,7 @@
   <title>Unity WebGL Player | REX BLITZ</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
-  <script async src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Telegram Web Apps API -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 
 <body>
@@ -26,7 +26,7 @@
       <div id="unity-build-title">REX BLITZ</div>
     </div> -->
   </div>
-  <script src="Build/build_rex_blitz.loader.js"></script> <!-- Ensure this path is correct -->
+  <!-- <script src="Build/build_rex_blitz.loader.js"></script>  -->
   <script>
 
     var container = document.querySelector("#unity-container");
@@ -117,6 +117,10 @@
         //   unityInstance.SetFullscreen(1);
         // };
         window.Telegram.WebApp.ready();
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId') || 'Unknown';
+        const username = urlParams.get('username') || 'Unknown';
+
 
         function sendDataToUnity(gameObjectName, methodName, data) {
           if (typeof unityInstance !== 'undefined') {
@@ -131,18 +135,11 @@
         const initDataUnsafe = tg.initDataUnsafe;
         console.log("Telegram initDataUnsafe:", tg.initDataUnsafe);
         console.log("Telegram WebApp Object:", window.Telegram.WebApp);
-        if (initDataUnsafe && initDataUnsafe.chat && initDataUnsafe.user) {
-          const chatId = initDataUnsafe.chat.id.toString();
-          const username = initDataUnsafe.user.username || 'Unknown';
-
-          // Send chat_id to Unity
-          sendDataToUnity('TelegramManager', 'ReceiveChatID', chatId);
-
+        if (initDataUnsafe && initDataUnsafe.user) {
           // Send username to Unity
           sendDataToUnity('TelegramManager', 'ReceiveUsername', username);
         } else {
           // Handle cases where data is missing
-          sendDataToUnity('TelegramManager', 'ReceiveChatID', 'Unknown');
           sendDataToUnity('TelegramManager', 'ReceiveUsername', 'Unknown');
           console.warn('Chat or User information is missing.');
         }
