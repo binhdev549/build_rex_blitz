@@ -7,11 +7,12 @@
   <title>Unity WebGL Player | REX BLITZ</title>
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
+  <script async src="https://telegram.org/js/telegram-web-app.js"></script> <!-- Telegram Web Apps API -->
 </head>
 
 <body>
-  <div id="unity-container" style="width: 360px; height: 640px;">
-    <canvas id="unity-canvas" width=360px height=360px></canvas>
+  <div id="unity-container" style="width: 100%; height: 100%;">
+    <canvas id="unity-canvas" width=auto height=auto></canvas>
     <div id="unity-loading-bar">
       <div id="unity-logo"></div>
       <div id="unity-progress-bar-empty">
@@ -21,41 +22,15 @@
     <!-- <div id="unity-warning"> </div>
     <div id="unity-footer">
       <div id="unity-webgl-logo"></div>
-      <div id="unity-fullscreen-button"></div>
+      <div id="unity-fullscreen-button"></div>s
       <div id="unity-build-title">REX BLITZ</div>
     </div> -->
   </div>
+  <script src="Build/build_rex_blitz.loader.js"></script> <!-- Ensure this path is correct -->
   <script>
     window.Telegram = window.Telegram || {};
-    // Telegram.WebApp = {
-    //   ready: function () {
-    //     console.log('Telegram WebApp is ready.');
-    //   },
-    //   initDataUnsafe: {
-    //     user: {
-    //       username: 'TestUser' // Change this value for different test cases
-    //     }
-    //   }
-    // };
 
-    // Initialize Telegram WebApp
-    const tg = window.Telegram.WebApp;
 
-    // Ready Event: Triggered when WebApp is fully loaded
-    tg.ready();
-
-    // Function to receive username from Telegram and send to Unity
-    function sendUsernameToUnity(username) {
-      if (typeof myGameInstance !== 'undefined') {
-        myGameInstance.SendMessage('TelegramManager', 'ReceiveUsername', username);
-        console.log('Username sent to Unity:', username);
-      } else {
-        console.error('Unity instance is not defined.');
-      }
-    }
-
-    // Get User Info
-    const user = tg.initDataUnsafe.user;
 
 
     var container = document.querySelector("#unity-container");
@@ -127,8 +102,8 @@
     } else {
       // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
+      canvas.style.width = "360px";
+      canvas.style.height = "640px";
     }
 
     loadingBar.style.display = "block";
@@ -145,11 +120,32 @@
         // fullscreenButton.onclick = () => {
         //   unityInstance.SetFullscreen(1);
         // };
+        function sendDataToUnity(gameObjectName, methodName, data) {
+          if (typeof unityInstance !== 'undefined') {
+            unityInstance.SendMessage(gameObjectName, methodName, data);
+            console.log(`Data sent to Unity: ${data}`);
+          } else {
+            console.error('Unity instance is not defined.');
+          }
+        }
 
-        if (user && user.username) {
-          sendUsernameToUnity(user.username);
+        const tg = window.Telegram.WebApp;
+        const initDataUnsafe = tg.initDataUnsafe;
+
+        if (initDataUnsafe && initDataUnsafe.chat && initDataUnsafe.user) {
+          const chatId = initDataUnsafe.chat.id.toString();
+          const username = initDataUnsafe.user.username || 'Unknown';
+
+          // Send chat_id to Unity
+          sendDataToUnity('LoginManager', 'ReceiveChatID', chatId);
+
+          // Send username to Unity
+          sendDataToUnity('LoginManager', 'ReceiveUsername', username);
         } else {
-          sendUsernameToUnity('Unknown');
+          // Handle cases where data is missing
+          sendDataToUnity('LoginManager', 'ReceiveChatID', 'Unknown');
+          sendDataToUnity('LoginManager', 'ReceiveUsername', 'Unknown');
+          console.warn('Chat or User information is missing.');
         }
       }).catch((message) => {
         alert(message);
