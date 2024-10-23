@@ -120,8 +120,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('userId') || 'Unknown';
         const username = urlParams.get('username') || 'Unknown';
-        console.log("User ID:", userId);
-        console.log("Username:", username);
+
 
         function sendDataToUnity(gameObjectName, methodName, data) {
           if (typeof unityInstance !== 'undefined') {
@@ -131,20 +130,9 @@
             console.error('Unity instance is not defined.');
           }
         }
-        sendDataToUnity('TelegramManager', 'ReceiveUsername', username);
+        sendDataToUnity('LoginManager', 'ReceiveUsername', username);
 
-        // const tg = window.Telegram.WebApp;
-        // const initDataUnsafe = tg.initDataUnsafe;
-        // console.log("Telegram initDataUnsafe:", tg.initDataUnsafe);
-        // console.log("Telegram WebApp Object:", window.Telegram.WebApp);
-        // if (initDataUnsafe && initDataUnsafe.user) {
-        //   // Send username to Unity
-        //   sendDataToUnity('TelegramManager', 'ReceiveUsername', username);
-        // } else {
-        //   // Handle cases where data is missing
-        //   sendDataToUnity('TelegramManager', 'ReceiveUsername', 'Unknown');
-        //   console.warn('Chat or User information is missing.');
-        // }
+
       }).catch((message) => {
         alert(message);
       });
