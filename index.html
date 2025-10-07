@@ -71,7 +71,6 @@
       productName: "REX BLITZ",
       productVersion: "1.0",
       showBanner: unityShowBanner,
-      autoSyncPersistentDataPath: true,
     };
 
     // By default Unity keeps WebGL canvas render target size matched with
@@ -117,20 +116,21 @@
         // fullscreenButton.onclick = () => {
         //   unityInstance.SetFullscreen(1);
         // };
-        // window.Telegram.WebApp.ready();
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const userId = urlParams.get('userId') || 'Unknown';
-        // const username = urlParams.get('username') || 'Unknown';
+        window.Telegram.WebApp.ready();
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId') || 'Unknown';
+        const username = urlParams.get('username') || 'Unknown';
 
 
-        // function sendDataToUnity(gameObjectName, methodName, data) {
-        //   if (typeof unityInstance !== 'undefined') {
-        //     unityInstance.SendMessage(gameObjectName, methodName, data);
-        //   } else {
-        //     console.error('Unity instance is not defined.');
-        //   }
-        // }
-        // sendDataToUnity('LoginManager', 'ReceiveUserID', userId);
+        function sendDataToUnity(gameObjectName, methodName, data) {
+          if (typeof unityInstance !== 'undefined') {
+            unityInstance.SendMessage(gameObjectName, methodName, data);
+            console.log(`Data sent to Unity: ${data}`);
+          } else {
+            console.error('Unity instance is not defined.');
+          }
+        }
+        sendDataToUnity('LoginManager', 'ReceiveUsername', username);
 
 
       }).catch((message) => {
